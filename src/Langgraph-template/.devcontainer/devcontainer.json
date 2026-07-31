@@ -1,17 +1,13 @@
 {
-  "name": "langgraph-workspace",
-
+  "name": "langgraph-template",
   "build": {
     "dockerfile": "Dockerfile"
   },
-
   "postCreateCommand": "bash ${containerWorkspaceFolder}/.devcontainer/scripts/postCreateCommand.sh",
-
   "containerEnv": {
     "PYTHONUNBUFFERED": "1",
     "PIP_DISABLE_PIP_VERSION_CHECK": "1"
   },
-
   "customizations": {
     "vscode": {
       "extensions": [
@@ -21,7 +17,6 @@
       ]
     }
   },
-
   "remoteUser": "vscode",
   "containerUser": "vscode",
   "updateRemoteUserUID": false
