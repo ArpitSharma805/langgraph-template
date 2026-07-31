@@ -1,0 +1,9 @@
+{
+  "id": "langgraph-template",
+  "version": "1.0.0",
+  "name": "LangGraph Workspace",
+  "description": "Development container for LangGraph, LangChain and AI agent workflows.",
+  "documentationURL": "https://github.com/ArpitSharma805/langgraph-template",
+  "publisher": "ArpitSharma805",
+  "options": {}
+}
