@@ -17,9 +17,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: devcontainers/action@v1
-        with:
-          publish-templates: "true"
-          base-path-to-templates: "./src"
+      - name: Install Dev Containers CLI
+        run: npm install -g @devcontainers/cli
+
+      - name: Publish Template
         env:
           GITHUB_TOKEN: ${{ secrets.GHCR_TOKEN }}
+        run: |
+          devcontainer templates publish \
+            -r ghcr.io \
+            -n ArpitSharma805/langgraph-template \
+            ./src/langgraph-template
