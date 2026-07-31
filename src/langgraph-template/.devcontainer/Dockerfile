@@ -1,17 +1,34 @@
-FROM mcr.microsoft.com/devcontainers/python:3.11
+# Base image – Microsoft's base devcontainer image (git, curl, zsh, vscode user).
+FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
 
-USER root
-
+# ── System packages and Python ────────────────────────────────────────────────
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    git \
-    jq \
-    tree \
-    ripgrep \
-    ca-certificates \
+      ripgrep \
+      jq \
+      tree \
+      ca-certificates \
+      gnupg \
+      python3 \
+      python3-pip \
+      python3-venv \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Devin CLI (without automatic setup/login)
+# ── Node 22 via NodeSource ────────────────────────────────────────────────────
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── GitHub CLI ────────────────────────────────────────────────────────────────
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+      | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+      > /etc/apt/sources.list.d/github-cli.list \
+    && apt-get update \
+    && apt-get install -y gh \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── Devin CLI ────────────────────────────────────────────────────────────────
 USER vscode
 
 RUN curl -fsSL https://cli.devin.ai/install.sh -o /tmp/devin-install.sh \
@@ -23,13 +40,17 @@ RUN curl -fsSL https://cli.devin.ai/install.sh -o /tmp/devin-install.sh \
 
 USER root
 
+# ── CA handling ──────────────────────────────────────────────────────────────
 ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt \
     GIT_SSL_CAINFO=/etc/ssl/certs/ca-certificates.crt \
     REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
     SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
+# ── LangGraph defaults ───────────────────────────────────────────────────────
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PYTHONUNBUFFERED=1
+
 ENV PATH=/home/vscode/.local/bin:${PATH}
 
-USER vscode
-
 WORKDIR /workspaces
+``
