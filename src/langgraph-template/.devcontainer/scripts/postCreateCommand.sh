@@ -59,7 +59,25 @@ ls -1 .agents/skills 2>/dev/null || echo "  (none found — check the install ou
 
 # -----------------------------------------------------------------------------
 # Add further setup steps below, e.g.:
-#
+# -----------------------------------------------------------------------------
+# Python + LangGraph setup
+# -----------------------------------------------------------------------------
+echo "[postCreate] Creating Python virtual environment..."
+
+python3 -m venv .venv
+
+source .venv/bin/activate
+
+pip install --upgrade pip
+
+echo "[postCreate] Installing LangGraph dependencies..."
+
+pip install \
+  langgraph \
+  langchain \
+  langchain-openai \
+  langsmith \
+  python-dotenv
 #   echo "[postCreate] Installing dependencies..."
 #   npm ci
 #
